@@ -33,7 +33,7 @@
 #' @examples
 #' get_data_dims("filename.h5")
 
-get_data_dims <- function(fileName){
+Hey_R_get_data_dims <- function(fileName){
   # make sure everything is closed
   H5close()
   # open the file for viewing
@@ -68,7 +68,7 @@ get_data_dims <- function(fileName){
 
 ## FUNCTION - create spatial extent object
 
-create_extent_subset <- function(h5.extent, dims, res=c(1,1)){
+Hey_R_create_extent_subset <- function(h5.extent, dims, res=c(1,1)){
   # CALCULATE the XY left corner coordinate (xmin,ymax)
   xMin <- h5.extent@xmin + (dims[1] * res[1])
   yMax <- h5.extent@ymax - (dims[3] * res[2])
@@ -96,12 +96,12 @@ create_extent_subset <- function(h5.extent, dims, res=c(1,1)){
 #' @examples
 #' create_extent(fileName, res=c(xres, yres))
 
-create_extent <- function(fileName){
+Hey_R_create_extent <- function(fileName){
   # Grab upper LEFT corner coordinate from map info dataset
   mapInfo <- h5read(fileName, "map info")
 
   # create object with each value in the map info dataset
-  mapInfo<-unlist(strsplit(mapInfo, ","))
+  Hey_R_mapInfo<-unlist(strsplit(mapInfo, ","))
   # grab the XY left corner coordinate (xmin,ymax)
   xMin <- as.numeric(mapInfo[4])
   yMax <- as.numeric(mapInfo[5])
@@ -134,7 +134,7 @@ create_extent <- function(fileName){
 #' clean_refl_data(fileName, reflMatrix, epsg)
 
 
-clean_refl_data <- function(fileName, reflMatrix, epsg){
+Hey_R_clean_refl_data <- function(fileName, reflMatrix, epsg){
   # r  get attributes for the Reflectance dataset
   reflInfo <- h5readAttributes(fileName, "Reflectance")
   # grab noData value
@@ -167,7 +167,7 @@ clean_refl_data <- function(fileName, reflMatrix, epsg){
 #' @examples
 #' read_band(fileName, index)
 
-read_band <- function(fileName, index){
+Hey_R_read_band <- function(fileName, index){
   # Extract or "slice" data for band 34 from the HDF5 file
   aBand<- h5read(fileName, "Reflectance", index=index)
   # Convert from array to matrix so we can plot and convert to a raster
@@ -192,7 +192,7 @@ read_band <- function(fileName, index){
 #' @examples
 #' calculate_index_extent(clipExten, h5Extent)
 #'
-calculate_index_extent <- function(clipExtent, h5Extent, xscale=1, yscale=1){
+Hey_R_calculate_index_extent <- function(clipExtent, h5Extent, xscale=1, yscale=1){
   # check to see if the class of clipExtent = Extent, if not, convert
   if(class(clipExtent) != "Extent"){
     clipExtent <- extent(clipExtent)
@@ -253,7 +253,7 @@ calculate_index_extent <- function(clipExtent, h5Extent, xscale=1, yscale=1){
 #' open_band(fileName, bandNum, epsg, subsetData=FALSE, dims=NULL)
 #'
 
-open_band <- function(fileName, bandNum,  epsg, subsetData=FALSE, dims=NULL){
+Hey_R_open_band <- function(fileName, bandNum,  epsg, subsetData=FALSE, dims=NULL){
   # make sure any open connections are closed
   H5close()
   # if the band is a subset of the file, subset=TRUE
@@ -301,7 +301,7 @@ open_band <- function(fileName, bandNum,  epsg, subsetData=FALSE, dims=NULL){
 #'
 
 #
-create_stack <- function(file, bands, epsg, subset=FALSE, dims=NULL){
+Hey_R_create_stack <- function(file, bands, epsg, subset=FALSE, dims=NULL){
 
   # use lapply to run the band function across all three of the bands
   rgb_rast <- lapply(bands, open_band,
@@ -323,7 +323,7 @@ create_stack <- function(file, bands, epsg, subset=FALSE, dims=NULL){
 #' @param file the path to the h5 file
 #' @param bands the band numbers in the reflectance data
 #'
-get_wavelength <- function(file, bands) {
+Hey_R_get_wavelength <- function(file, bands) {
   all_wavelengths <- h5read(file, 'wavelength')
   layer_wavelengths <- all_wavelengths[bands]
   wavelength_in_nanometers <- layer_wavelengths * 1000
@@ -345,7 +345,7 @@ get_wavelength <- function(file, bands) {
 #' @examples
 #' extract_av_refl(aRaster, aMask, aFun=mean)
 #'
-extract_av_refl <- function(aRaster, aMask=NULL, aFun=mean){
+Hey_R_extract_av_refl <- function(aRaster, aMask=NULL, aFun=mean){
   # mask band
   if(!is.null(aMask)){
     aRaster <- mask(aRaster, aMask) }
@@ -376,7 +376,7 @@ extract_av_refl <- function(aRaster, aMask=NULL, aFun=mean){
 #' @examples
 #' get_spectra(fileName, bandNum)
 
-get_spectra <- function(fileName, bandNum=1,
+Hey_R_get_spectra <- function(fileName, bandNum=1,
                         epsg=32611, subset=FALSE,
                         dims=NULL, mask=NULL, fun=mean){
   # open a band
@@ -400,7 +400,7 @@ get_spectra <- function(fileName, bandNum=1,
 #' @examples
 #' clean_spectra(fileName, bandNum)
 
-clean_spectra <- function(spectra, wavelengths){
+Hey_R_clean_spectra <- function(spectra, wavelengths){
   # reformat the output list
   spectra<- data.frame(unlist(spectra))
   spectra$wavelength <- wavelengths
